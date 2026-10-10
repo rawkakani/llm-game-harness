@@ -2,6 +2,7 @@ import { assertEquals, assertMatch } from "@std/assert";
 import { collect, GameHarness } from "./harness.ts";
 import { createApp } from "./http.ts";
 import type { ChatProvider } from "./provider.ts";
+import { LoginTool } from "./tools/login.ts";
 import { RandomTool } from "./tools/random.ts";
 import { ToolRegistry } from "./tools/tool.ts";
 import type { ChatRequest, Chunk } from "./types.ts";
@@ -49,6 +50,14 @@ Deno.test("random deals a scenario and reads the roll", () => {
   });
   assertEquals(new RandomTool(() => 0.999).execute({ kind: "nonsense" }).roll, 20);
   assertEquals(new RandomTool(() => 0.999).execute({}).fortune, "triumph");
+});
+
+Deno.test("login echoes the username and refuses an empty one", () => {
+  const login = new LoginTool();
+  const ok = login.execute({ username: "  Captain Mara  " }) as { loggedInAs: string; message: string };
+  assertEquals(ok.loggedInAs, "Captain Mara");
+  assertEquals(ok.message, "Logged in as Captain Mara.");
+  assertEquals(login.execute({ username: "   " }), { error: "A username is required to log in." });
 });
 
 Deno.test("the harness runs the tool, feeds the result back and returns only the story", async () => {

@@ -44,6 +44,14 @@ All configuration is through environment variables (see `.env.example`):
 
 The key is read **only on the server** and is never sent to the browser.
 
+## Tools
+
+The model is given two tools. Adding another is writing one `Tool` and registering it in `main.ts`.
+
+- **`random`** — rolls the dice of fate (see below).
+- **`login`** — logs the player in and echoes the login (their name) back, so the story can greet them
+  and remember who they are. It handles identity only; it never takes or returns a password.
+
 ## The `random` tool
 
 The game master calls `random` to roll a d20 and deal a scenario — an *event* (an encounter,
