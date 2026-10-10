@@ -1,0 +1,19 @@
+# Env / secrets
+.env
+.env.*
+!.env.example
+
+# Dependencies (Deno manages its own cache; web/ uses a local node_modules)
+node_modules/
+web/node_modules/
+
+# Generated theme CSS (rebuilt by `deno task theme`)
+web/theme.gen.css
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Astryx theme-build byproducts
+web/harness.js
+web/harness.d.ts

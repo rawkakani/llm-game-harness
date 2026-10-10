@@ -1,0 +1,111 @@
+/* Layer order declared once, before any import (Astryx cascade-layer rule). */
+@layer reset, base, astryx-base, astryx-theme, components, utilities;
+
+@import "@astryxdesign/core/reset.css";
+@import "@astryxdesign/core/astryx.css";
+
+@layer base {
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--color-background-body);
+    color: var(--color-text-primary);
+    font-family: var(--font-family-body);
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+@layer utilities {
+  /* Content is held to one measure and centred; bands run full width behind it. */
+  .wrap { box-sizing: border-box; width: 100%; max-width: 1080px; margin-inline: auto; padding-inline: var(--spacing-5); }
+
+  /* Nav: a sticky, blurred hairline bar. */
+  .nav {
+    position: sticky; inset-block-start: 0; z-index: 20;
+    background: color-mix(in srgb, var(--color-background-body) 72%, transparent);
+    backdrop-filter: blur(12px);
+    border-block-end: 1px solid var(--hairline);
+  }
+  .brand .mark, .mark {
+    display: grid; place-items: center;
+    inline-size: 28px; block-size: 28px;
+    border-radius: var(--radius-element);
+    background: var(--color-accent); color: var(--color-on-accent);
+  }
+  .mark-lg { inline-size: 52px; block-size: 52px; border-radius: var(--radius-container); }
+  @media (max-width: 620px) { .nav-links { display: none; } }
+
+  /* Hero: a centred stack glowing over the preview. */
+  .hero { position: relative; overflow: hidden; }
+  .glow { position: absolute; inset: 0; background: var(--glow); pointer-events: none; }
+  .hero > .wrap { position: relative; }
+  .eyebrow { letter-spacing: 0.08em; text-transform: uppercase; }
+  .hero-title { font-size: clamp(2.4rem, 6vw, 4.2rem); line-height: 1.04; letter-spacing: -0.03em; max-width: 16ch; }
+  .hero-blurb { max-width: 60ch; }
+
+  /* The transcript preview, dressed as an app window. */
+  .preview {
+    width: 100%; max-width: 760px;
+    border: 1px solid var(--hairline-strong) !important;
+    border-radius: var(--radius-page);
+    background: linear-gradient(180deg, var(--surface-raised), transparent), var(--color-background-surface);
+    overflow: hidden;
+    box-shadow: 0 40px 90px -40px rgba(0,0,0,0.8);
+  }
+  .preview-bar { border-block-end: 1px solid var(--hairline); }
+  .dot { inline-size: 10px; block-size: 10px; border-radius: var(--radius-full); background: var(--hairline-strong); }
+  .preview-title { margin-inline-start: var(--spacing-2); }
+  .turn-text { white-space: pre-wrap; line-height: 1.55; }
+  .turn-assistant .turn-text { color: var(--color-text-secondary); }
+
+  /* Sections and cards. */
+  .section { padding-block: clamp(var(--spacing-10), 10vw, calc(var(--spacing-12) * 1.6)); }
+  .feature {
+    border: 1px solid var(--hairline) !important;
+    background: var(--color-background-card) !important;
+    border-radius: var(--radius-container);
+    transition: border-color var(--motion-medium), transform var(--motion-medium);
+  }
+  .feature:hover { border-color: var(--hairline-strong) !important; transform: translateY(-2px); }
+
+  .api { border: 1px solid var(--hairline) !important; border-radius: var(--radius-page); overflow: hidden; background: var(--color-background-card) !important; }
+  .api-code { border-inline-start: 1px solid var(--hairline); min-width: 0; }
+  @media (max-width: 760px) { .api-code { border-inline-start: 0; border-block-start: 1px solid var(--hairline); } }
+
+  .play-band {
+    border: 1px solid var(--hairline-strong) !important;
+    border-radius: var(--radius-page);
+    background: radial-gradient(100% 140% at 50% 0%, var(--color-accent-muted) 0%, transparent 60%), var(--color-background-card) !important;
+  }
+
+  .footer { border-block-start: 1px solid var(--hairline); }
+
+  /* The floating play bubble and its overlay. */
+  .fab {
+    position: fixed; inset-block-end: 24px; inset-inline-end: 24px; z-index: 40;
+    inline-size: 60px; block-size: 60px;
+    display: grid; place-items: center;
+    border: 0; border-radius: var(--radius-full); cursor: pointer;
+    background: var(--color-accent); color: var(--color-on-accent);
+    box-shadow: var(--bubble-shadow);
+    transition: transform var(--motion-fast);
+  }
+  .fab:hover { transform: scale(1.06); }
+  .fab:active { transform: scale(0.96); }
+
+  .overlay {
+    position: fixed; inset-block-end: 24px; inset-inline-end: 24px; z-index: 40;
+    display: flex; flex-direction: column;
+    inline-size: min(400px, calc(100vw - 32px));
+    block-size: min(620px, calc(100vh - 48px));
+    border: 1px solid var(--hairline-strong);
+    border-radius: var(--radius-page);
+    background: var(--color-background-popover);
+    box-shadow: var(--bubble-shadow);
+    overflow: hidden;
+  }
+  .overlay-head { border-block-end: 1px solid var(--hairline); }
+  .overlay-body { flex: 1; min-height: 0; }
+  .overlay-foot { border-block-start: 1px solid var(--hairline); padding: var(--spacing-2); }
+  .thinking { display: inline-flex; align-items: center; gap: var(--spacing-1); }
+}

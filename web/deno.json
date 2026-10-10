@@ -1,0 +1,23 @@
+{
+  "name": "@rawkakani/llm-game-harness-web",
+  "version": "0.1.0",
+  "tasks": {
+    "theme": "npx @astryxdesign/cli theme build ./theme.ts --out ./theme.gen.css && rm -f theme.gen.css.d.ts harness.js harness.d.ts",
+    "dev": "deno run -A npm:vite@^7",
+    "build": "deno task theme && deno run -A npm:vite@^7 build"
+  },
+  "imports": {
+    "react": "npm:react@^19.3",
+    "react/jsx-runtime": "npm:react@^19.3/jsx-runtime",
+    "react-dom": "npm:react-dom@^19.3",
+    "react-dom/client": "npm:react-dom@^19.3/client",
+    "@types/react": "npm:@types/react@^19.3",
+    "@astryxdesign/core": "npm:@astryxdesign/core@^0.6.5",
+    "@astryxdesign/core/": "npm:/@astryxdesign/core@^0.6.5/",
+    "@stylexjs/stylex": "npm:@stylexjs/stylex@^0.19.0",
+    "lucide-react": "npm:lucide-react@^1.18",
+    "vite": "npm:vite@^7"
+  },
+  "nodeModulesDir": "auto",
+  "compilerOptions": { "jsx": "react-jsx", "jsxImportSource": "react", "lib": ["dom", "dom.iterable", "deno.ns"] }
+}

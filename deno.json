@@ -1,0 +1,17 @@
+{
+  "name": "@rawkakani/llm-game-harness",
+  "version": "0.1.0",
+  "exports": "./main.ts",
+  "tasks": {
+    "start": "deno run --allow-net --allow-env --allow-read=static --env-file main.ts",
+    "dev": "deno run --watch --allow-net --allow-env --allow-read=static --env-file main.ts",
+    "test": "deno test",
+    "build": "cd web && deno task build"
+  },
+  "imports": {
+    "@std/assert": "jsr:@std/assert@^1",
+    "@std/http": "jsr:@std/http@^1"
+  },
+  "exclude": ["static/"],
+  "fmt": { "lineWidth": 120 }
+}
