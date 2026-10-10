@@ -15,7 +15,9 @@ export const harnessTheme = defineTheme({
     heading: { family: "Inter", fallbacks: SANS, weights: { 1: "semibold", 2: "semibold" } },
     code: { family: "ui-monospace", fallbacks: '"SF Mono", "Fira Code", monospace' },
   },
-  radius: { base: 8, multiplier: 1 },
+  // A uniform rounded-square: one small radius on every tier (multiplier 0 flattens the scale to `base`), so
+  // buttons, cards, the code block and the bubbles all share the same squared corner rather than growing rounder.
+  radius: { base: 8, multiplier: 0 },
   motion: { fast: 140, medium: 300, ratio: 0.75 },
   color: { neutralStyle: "neutral" },
   localTokens: {
