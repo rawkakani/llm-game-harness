@@ -21,7 +21,7 @@ export function PlayWidget() {
   const [messages, setMessages] = useState<Msg[]>([OPENER]);
   const [isThinking, setIsThinking] = useState(false);
   const [error, setError] = useState<string | undefined>();
-  const abort = useRef<AbortController>();
+  const abort = useRef<AbortController | undefined>(undefined);
   const endRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => endRef.current?.scrollIntoView({ behavior: "smooth" }), [messages, isOpen]);

@@ -1,32 +1,37 @@
 /**
- * The landing page: a dark, developer-tool homepage in the manner of linear.app. A sticky nav, a centered hero
- * glowing over a game-transcript preview, three feature columns, a "talk to it like OpenAI" band with a curl
- * sample, and a footer. The live demo lives in the floating PlayWidget, bottom-right.
+ * The landing page: a dark, refined developer-tool homepage in the manner of linear.app. A sticky translucent
+ * nav; a centered hero with a pill badge glowing over a framed transcript window; a trust caption; three
+ * figure-tagged columns; a signature showcase of the random tool with a designed scenario card; a "talk to it
+ * like OpenAI" band; a play CTA; and a multi-column footer. The live demo is the floating PlayWidget.
  */
 import { Button } from "@astryxdesign/core/Button";
-import { Card } from "@astryxdesign/core/Card";
 import { CodeBlock } from "@astryxdesign/core/CodeBlock";
 import { Grid } from "@astryxdesign/core/Grid";
 import { Heading } from "@astryxdesign/core/Heading";
 import { Icon } from "@astryxdesign/core/Icon";
 import { HStack, VStack } from "@astryxdesign/core/Stack";
 import { Text } from "@astryxdesign/core/Text";
-import { ArrowRight, Dices } from "lucide-react";
-import { API, FEATURES, FOOTER, HERO, NAV, PREVIEW, WIDGET } from "./content.ts";
+import { ArrowRight, ArrowUpRight, Dices } from "lucide-react";
+import { API, DICE, FEATURES, FOOTER, HERO, NAV, PLAY, PREVIEW, TRUST, WIDGET } from "./content.ts";
 import { PlayWidget } from "./widget.tsx";
+
+const arrow = <Icon icon={ArrowRight} size="sm" color="inherit" />;
 
 function Nav() {
   return (
     <header className="nav">
-      <HStack className="wrap" paddingBlock={3} hAlign="between" vAlign="center">
+      <HStack className="wrap nav-inner" paddingBlock={3} hAlign="between" vAlign="center">
         <HStack className="brand" gap={2} vAlign="center">
           <span className="mark"><Icon icon={Dices} size="sm" color="inherit" /></span>
           <Text weight="semibold">Story Engine</Text>
         </HStack>
-        <HStack className="nav-links" gap={1} vAlign="center">
+        <HStack className="nav-links" gap={0.5} vAlign="center">
           {NAV.map((item) => <Button key={item.label} label={item.label} variant="ghost" size="sm" href={item.href} />)}
         </HStack>
-        <Button label="Play it now" variant="primary" size="sm" href="#play" endContent={<Icon icon={ArrowRight} size="sm" color="inherit" />} />
+        <HStack gap={2} vAlign="center">
+          <Button className="nav-ghost" label="GitHub" variant="ghost" size="sm" href={HERO.secondary.href} target="_blank" />
+          <Button label="Play it now" variant="primary" size="sm" href="#play" />
+        </HStack>
       </HStack>
     </header>
   );
@@ -36,17 +41,29 @@ function Hero() {
   return (
     <section className="hero">
       <div className="glow" aria-hidden="true" />
-      <VStack className="wrap" gap={10} hAlign="center" paddingBlock={10}>
-        <VStack gap={5} hAlign="center">
-          <Text className="eyebrow" type="label" color="accent" justify="center">{HERO.eyebrow}</Text>
+      <VStack className="wrap" gap={8} hAlign="center">
+        <VStack className="hero-copy" gap={5} hAlign="center">
+          <a className="badge" href={HERO.badge.href}>
+            <span className="badge-tag">{HERO.badge.tag}</span>
+            <span className="badge-text">{HERO.badge.text}</span>
+            <Icon icon={ArrowRight} size="sm" color="inherit" />
+          </a>
           <Heading className="hero-title" level={1} type="display-1" justify="center" textWrap="balance">{HERO.title}</Heading>
           <Text className="hero-blurb" type="large" color="secondary" justify="center" textWrap="pretty">{HERO.blurb}</Text>
           <HStack className="hero-cta" gap={3} vAlign="center" wrap="wrap">
-            <Button label={HERO.primary.label} variant="primary" size="lg" href={HERO.primary.href} endContent={<Icon icon={ArrowRight} size="sm" color="inherit" />} />
+            <Button label={HERO.primary.label} variant="primary" size="lg" href={HERO.primary.href} endContent={arrow} />
             <Button label={HERO.secondary.label} variant="secondary" size="lg" href={HERO.secondary.href} target="_blank" />
           </HStack>
         </VStack>
         <Preview />
+        <HStack className="trust" gap={0} hAlign="center" wrap="wrap">
+          {TRUST.map((item, i) => (
+            <HStack key={item} gap={0} vAlign="center">
+              {i > 0 && <span className="trust-sep" aria-hidden="true" />}
+              <Text className="trust-item" type="supporting" color="secondary">{item}</Text>
+            </HStack>
+          ))}
+        </HStack>
       </VStack>
     </section>
   );
@@ -55,39 +72,48 @@ function Hero() {
 /** The hero's picture: a short, fixed game transcript dressed as an app window, so the page reads as a game at a glance. */
 function Preview() {
   return (
-    <Card className="preview" padding={0} variant="transparent">
-      <HStack className="preview-bar" gap={1.5} vAlign="center" padding={3}>
-        <span className="dot" /><span className="dot" /><span className="dot" />
-        <Text className="preview-title" type="supporting" color="secondary">a pirate adventure · /v1/chat/completions</Text>
+    <div className="preview">
+      <HStack className="preview-bar" gap={2} vAlign="center" padding={3}>
+        <HStack gap={1.5} vAlign="center"><span className="dot" /><span className="dot" /><span className="dot" /></HStack>
+        <Text className="preview-title" type="supporting" color="secondary">{PREVIEW.title}</Text>
+        <span className="preview-endpoint">{PREVIEW.endpoint}</span>
       </HStack>
-      <VStack className="preview-body" gap={4} padding={4}>
-        {PREVIEW.map((turn, index) => (
-          <VStack key={index} gap={1.5} className={`turn turn-${turn.role}`}>
-            <Text type="label" color={turn.role === "user" ? "accent" : "secondary"}>{turn.role === "user" ? "you" : "game master"}</Text>
-            <Text className="turn-text" color="primary">{turn.text}</Text>
-          </VStack>
+      <VStack className="preview-body" gap={4} padding={5}>
+        {PREVIEW.turns.map((turn, index) => (
+          <div key={index} className={`msg msg-${turn.role}`}>
+            <Text className="bubble" color="inherit">{turn.text}</Text>
+          </div>
         ))}
+        <HStack className="typing" gap={1} vAlign="center" aria-hidden="true">
+          <span className="tdot" /><span className="tdot" /><span className="tdot" />
+        </HStack>
       </VStack>
-    </Card>
+    </div>
+  );
+}
+
+function SectionHead({ eyebrow, title, body }: { eyebrow?: string; title: string; body?: string }) {
+  return (
+    <VStack className="head" gap={3} hAlign="center">
+      {eyebrow && <Text className="eyebrow" type="label" color="accent" justify="center">{eyebrow}</Text>}
+      <Heading level={2} type="display-2" justify="center" textWrap="balance">{title}</Heading>
+      {body && <Text className="head-body" type="large" color="secondary" justify="center" textWrap="pretty">{body}</Text>}
+    </VStack>
   );
 }
 
 function Features() {
   return (
     <section id="how" className="section">
-      <VStack className="wrap" gap={8}>
-        <VStack gap={3} hAlign="center">
-          <Heading level={2} type="display-3" justify="center" textWrap="balance">A tiny harness with one good idea</Heading>
-          <Text type="large" color="secondary" justify="center" textWrap="pretty">Chance, handed to the model as a tool, and let to truly decide where the story goes.</Text>
-        </VStack>
-        <Grid columns={{ minWidth: 280, max: 3 }} gap={4}>
+      <VStack className="wrap" gap={10}>
+        <SectionHead title="A tiny harness with one good idea" body="Chance, handed to the model as a tool, and let to truly decide where the story goes." />
+        <Grid className="features" columns={{ minWidth: 260, max: 3 }} gap={0}>
           {FEATURES.map((feature) => (
-            <Card key={feature.title} className="feature" padding={5}>
-              <VStack gap={2}>
-                <Heading level={3} type="display-3">{feature.title}</Heading>
-                <Text color="secondary" textWrap="pretty">{feature.body}</Text>
-              </VStack>
-            </Card>
+            <VStack key={feature.title} className="feature" gap={3} padding={6}>
+              <Text className="fig" type="supporting" color="secondary">{feature.fig}</Text>
+              <Heading level={3} type="display-3">{feature.title}</Heading>
+              <Text color="secondary" textWrap="pretty">{feature.body}</Text>
+            </VStack>
           ))}
         </Grid>
       </VStack>
@@ -95,20 +121,73 @@ function Features() {
   );
 }
 
+/** The signature section: copy on one side, a designed sample of the random tool's output on the other. */
+function Dice() {
+  const { sample } = DICE;
+  const pct = Math.round((sample.roll / sample.max) * 100);
+  return (
+    <section id="dice" className="section">
+      <div className="wrap dice">
+        <div className="dice-glow" aria-hidden="true" />
+        <Grid columns={{ minWidth: 320, max: 2 }} gap={8} align="center">
+          <VStack className="dice-copy" gap={4}>
+            <Text className="eyebrow" type="label" color="accent">{DICE.eyebrow}</Text>
+            <Heading level={2} type="display-2" textWrap="balance">{DICE.title}</Heading>
+            <Text color="secondary" textWrap="pretty">{DICE.body}</Text>
+            <HStack className="chips" gap={1.5} wrap="wrap">
+              {DICE.kinds.map((kind) => <span key={kind} className="chip">{kind}</span>)}
+            </HStack>
+            <HStack>
+              <Button label={DICE.link.label} variant="ghost" href={DICE.link.href} target="_blank" endContent={<Icon icon={ArrowUpRight} size="sm" color="inherit" />} />
+            </HStack>
+          </VStack>
+
+          <div className="scenario">
+            <HStack className="scenario-head" gap={2} vAlign="center" padding={4}>
+              <span className="scenario-dot" aria-hidden="true" />
+              <Text className="scenario-tool" type="supporting">random</Text>
+              <Text className="scenario-label" type="supporting" color="secondary">tool call</Text>
+            </HStack>
+            <VStack className="scenario-body" gap={4} padding={5}>
+              <VStack gap={1.5}>
+                <Text className="scenario-kind" type="label" color="accent">{sample.kind}</Text>
+                <Text className="scenario-text" color="primary">{sample.scenario}</Text>
+              </VStack>
+              <VStack className="roll" gap={2}>
+                <HStack hAlign="between" vAlign="center">
+                  <Text type="supporting" color="secondary">d{sample.max} roll</Text>
+                  <HStack gap={2} vAlign="center">
+                    <Text className="roll-value" weight="semibold" color="primary">{String(sample.roll).padStart(2, "0")}</Text>
+                    <span className="fortune">{sample.fortune}</span>
+                  </HStack>
+                </HStack>
+                <div className="meter" role="img" aria-label={`rolled ${sample.roll} of ${sample.max}`}>
+                  <div className="meter-fill" style={{ width: `${pct}%` }} />
+                </div>
+              </VStack>
+            </VStack>
+          </div>
+        </Grid>
+      </div>
+    </section>
+  );
+}
+
 function Api() {
   return (
     <section id="api" className="section">
-      <Card className="wrap api" padding={0}>
-        <Grid columns={{ minWidth: 320, max: 2 }} gap={0}>
-          <VStack className="api-copy" gap={4} padding={6} vAlign="center">
-            <Heading level={2} type="display-3" textWrap="balance">{API.title}</Heading>
+      <div className="wrap api">
+        <Grid columns={{ minWidth: 320, max: 2 }} gap={0} align="stretch">
+          <VStack className="api-copy" gap={4} padding={8} vAlign="center">
+            <Text className="eyebrow" type="label" color="accent">{API.eyebrow}</Text>
+            <Heading level={2} type="display-2" textWrap="balance">{API.title}</Heading>
             <Text color="secondary" textWrap="pretty">{API.body}</Text>
           </VStack>
           <div className="api-code">
             <CodeBlock code={API.curl} language="bash" title="curl" container="section" width="100%" />
           </div>
         </Grid>
-      </Card>
+      </div>
     </section>
   );
 }
@@ -116,16 +195,15 @@ function Api() {
 function Play() {
   return (
     <section id="play" className="section">
-      <Card className="wrap play-band" padding={8}>
-        <VStack gap={4} hAlign="center">
+      <div className="wrap play-band">
+        <div className="play-glow" aria-hidden="true" />
+        <VStack gap={5} hAlign="center">
           <span className="mark mark-lg"><Icon icon={Dices} size="lg" color="inherit" /></span>
-          <Heading level={2} type="display-2" justify="center" textWrap="balance">Play it right here</Heading>
-          <Text type="large" color="secondary" justify="center" textWrap="pretty">
-            Tap the dice in the corner. The adventure starts at a fork in the road — type what you do, and see where the dice take it.
-          </Text>
+          <Heading level={2} type="display-2" justify="center" textWrap="balance">{PLAY.title}</Heading>
+          <Text className="head-body" type="large" color="secondary" justify="center" textWrap="pretty">{PLAY.body}</Text>
           <Text type="supporting" color="secondary" justify="center">{WIDGET.subtitle}</Text>
         </VStack>
-      </Card>
+      </div>
     </section>
   );
 }
@@ -133,12 +211,27 @@ function Play() {
 function Footer() {
   return (
     <footer className="footer">
-      <HStack className="wrap" paddingBlock={6} hAlign="between" vAlign="center" wrap="wrap" gap={3}>
-        <Text type="supporting" color="secondary">{FOOTER.note}</Text>
-        <HStack gap={1} vAlign="center">
-          {FOOTER.links.map((link) => <Button key={link.label} label={link.label} variant="ghost" size="sm" href={link.href} target="_blank" />)}
-        </HStack>
-      </HStack>
+      <VStack className="wrap" gap={8} paddingBlock={10}>
+        <Grid className="footer-grid" columns={{ minWidth: 200, max: 4 }} gap={6}>
+          <VStack gap={2}>
+            <HStack className="brand" gap={2} vAlign="center">
+              <span className="mark"><Icon icon={Dices} size="sm" color="inherit" /></span>
+              <Text weight="semibold">{FOOTER.brand}</Text>
+            </HStack>
+            <Text type="supporting" color="secondary" textWrap="pretty">{FOOTER.tagline}</Text>
+          </VStack>
+          {FOOTER.columns.map((column) => (
+            <VStack key={column.heading} className="footer-col" gap={2}>
+              <Text className="footer-heading" type="supporting" color="secondary">{column.heading}</Text>
+              {column.links.map((link) => (
+                <a key={link.label} className="footer-link" href={link.href} target={link.href.startsWith("http") ? "_blank" : undefined} rel="noreferrer">{link.label}</a>
+              ))}
+            </VStack>
+          ))}
+        </Grid>
+        <div className="footer-rule" />
+        <Text type="supporting" color="secondary">© {new Date().getFullYear()} Story Engine — MIT licensed.</Text>
+      </VStack>
     </footer>
   );
 }
@@ -150,6 +243,7 @@ export function Landing() {
       <main>
         <Hero />
         <Features />
+        <Dice />
         <Api />
         <Play />
       </main>
